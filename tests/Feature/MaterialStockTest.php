@@ -43,6 +43,15 @@ class MaterialStockTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_database_seeder_creates_starter_categories_without_demo_users(): void
+    {
+        $this->seed();
+
+        $this->assertDatabaseCount('material_categories', 5);
+        $this->assertDatabaseCount('users', 0);
+        $this->assertDatabaseHas('material_categories', ['name' => 'Raw material']);
+    }
+
     public function test_material_can_be_created_and_soft_deleted(): void
     {
         $category = MaterialCategory::create(['name' => 'Raw material']);
