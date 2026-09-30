@@ -43,13 +43,19 @@ class MaterialStockTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_database_seeder_creates_starter_categories_without_demo_users(): void
+    public function test_database_seeder_creates_repeatable_demo_stock_without_demo_users(): void
     {
+        $this->seed();
         $this->seed();
 
         $this->assertDatabaseCount('material_categories', 5);
+        $this->assertDatabaseCount('materials', 3);
+        $this->assertDatabaseCount('material_movements', 5);
         $this->assertDatabaseCount('users', 0);
         $this->assertDatabaseHas('material_categories', ['name' => 'Raw material']);
+
+        $portlandCement = Material::query()->where('name', 'Portland Cement')->firstOrFail();
+        $this->assertSame('140.00', number_format($portlandCement->current_balance, 2, '.', ''));
     }
 
     public function test_material_can_be_created_and_soft_deleted(): void

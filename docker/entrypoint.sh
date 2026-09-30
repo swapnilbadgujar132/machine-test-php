@@ -17,16 +17,12 @@ if ! grep -q '^APP_KEY=base64:' /var/lib/laravel/.env; then
 fi
 
 chown -R www-data:www-data /var/lib/laravel
-is_new_database=false
 if [ ! -f "$DB_DATABASE" ]; then
     touch "$DB_DATABASE"
-    is_new_database=true
 fi
 chown www-data:www-data "$DB_DATABASE"
 
 php artisan migrate --force
-if [ "$is_new_database" = true ]; then
-    php artisan db:seed --force
-fi
+php artisan db:seed --force
 
 exec apache2-foreground
