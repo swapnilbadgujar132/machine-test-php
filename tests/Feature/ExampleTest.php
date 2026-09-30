@@ -18,4 +18,12 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_urls_use_https_when_forwarded_by_the_proxy(): void
+    {
+        $this->withHeader('X-Forwarded-Proto', 'https')
+            ->get('/')
+            ->assertOk()
+            ->assertSee('https://localhost:8000/materials', false);
+    }
 }
